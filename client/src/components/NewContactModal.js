@@ -7,7 +7,7 @@ export default function NewContactModal({ closeModal }) {
   const idRef = useRef();
   const nameRef = useRef();
   const { createContact } = useContacts();
-  const { createConversation} = useConversations
+  // const { createConversation} = useConversations
 
   const handleSubmit = (e) => {
     e.preventDefault();
