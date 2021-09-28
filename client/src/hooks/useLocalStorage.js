@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const PREFIX = "whats-app-clone";
+const PREFIX = "whatsapp-clone-";
 
 function useLocalStorage(key, initialValue) {
   const prefixedKey = PREFIX + key;
@@ -9,8 +9,9 @@ function useLocalStorage(key, initialValue) {
     if (jsonValue != null) return JSON.parse(jsonValue);
     if (typeof initialValue === "function") {
       return initialValue();
+    } else {
+      return initialValue;
     }
-    return initialValue;
   });
 
   useEffect(() => {
