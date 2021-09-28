@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { useContacts } from "./ContactsProvider";
 
-const ConversationsContexts = React.createContext();
+const ConversationsContext = React.createContext();
 
 export function useConversations() {
-  return useContext(ConversationsContexts);
+  return useContext(ConversationsContext);
 }
 
 export function ConversationsProvider({ children }) {
@@ -12,6 +13,7 @@ export function ConversationsProvider({ children }) {
     "conversations",
     []
   );
+  const { contacts } = useContacts();
 
   const createConversation = (recipients) => {
     setConversations((prevConversations) => {
@@ -19,11 +21,27 @@ export function ConversationsProvider({ children }) {
     });
   };
 
+  const formattedConversations = conversations.map((conversation) => {
+    const recipients = conversation.recipients.map((recipient) => {
+      const contact = contacts.find((contact) => {
+        return contact.id === recipient;
+      });
+
+      const name = (contact && contact.name) || recipient;
+      return { id: recipient, name };
+    });
+
+    return { ...conversation, recipients };
+  });
+
+  const value = {
+    conversations: formattedConversations,
+    createConversation,
+  };
+
   return (
-    <ConversationsContexts.Provider
-      value={{ conversations, createConversation }}
-    >
+    <ConversationsContext.Provider value={ value }>
       {children}
-    </ConversationsContexts.Provider>
+    </ConversationsContext.Provider>
   );
 }
